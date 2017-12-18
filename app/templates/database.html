@@ -1,0 +1,9 @@
+{% extends 'header.html' %}
+
+{% block body %}
+<div class="container-fluid"> 
+	{% for user in data %}
+		<p>{{user}}</p>
+	{% endfor %}
+</div>
+{% endblock %}

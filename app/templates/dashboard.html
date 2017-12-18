@@ -1,0 +1,33 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+<div class="container-fluid">
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+    <li role="presentation"><a href="#cv" aria-controls="cv" role="tab" data-toggle="tab">Budget</a></li>
+    <li role="presentation"><a href="#achievments" aria-controls="achievments" role="tab" data-toggle="tab">Expense</a></li>
+    <li role="presentation"><a href="#work" aria-controls="work" role="tab" data-toggle="tab">Recommendation</a></li>
+  </ul>
+  <!-- Tab panes -->
+   <div class="tab-content">
+	   <div role="tabpanel" class="tab-pane active" id="home">
+			<ul>
+				<h3>Welcome {{ session.username }}!</h3>
+			</ul>
+	   	</div>
+		<div role="tabpanel" class="tab-pane" id="cv">
+			<ul>
+				<h3>{{ session.username }}</h3>
+			</ul>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="achievments">
+			
+		</div>
+		<div role="tabpanel" class="tab-pane" id="work"></div>
+	</div>
+
+</div>
+
+{% endblock %}
