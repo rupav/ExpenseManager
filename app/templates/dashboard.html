@@ -1,12 +1,13 @@
 {% extends "header.html" %}
 
+
 {% block body %}
 
 <div class="container-fluid">
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-    <li role="presentation"><a href="#cv" aria-controls="cv" role="tab" data-toggle="tab">Budget</a></li>
+    <li role="presentation"><a href="#budget" aria-controls="budget" role="tab" data-toggle="tab">Budget</a></li>
     <li role="presentation"><a href="#achievments" aria-controls="achievments" role="tab" data-toggle="tab">Expense</a></li>
     <li role="presentation"><a href="#work" aria-controls="work" role="tab" data-toggle="tab">Recommendation</a></li>
   </ul>
@@ -17,9 +18,42 @@
 				<h3>Welcome {{ session.username }}!</h3>
 			</ul>
 	   	</div>
-		<div role="tabpanel" class="tab-pane" id="cv">
+		<div role="tabpanel" class="tab-pane" id="budget">
 			<ul>
-				<h3>{{ session.username }}</h3>
+			<br>
+			<li>
+			
+				<!-- Trigger the modal with a button -->
+				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Calendar</button>
+
+				<!-- Modal -->
+				<div id="myModal" class="modal fade" role="dialog">
+				  <div class="modal-dialog modal-lg">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Calendar</h4>
+				      </div>
+				      <div class="modal-body">
+				          <h3>{{ html_code|safe }}</h3>
+				          <h1>Set Budget for this month!</h1>
+				          	<form action="" class="form-inline" method="post">
+				          		<input type="text" name="start_date" class="form-control" placeholder="1/1/17" value="{{request.form.start_date}}">
+								<input type="text" class="form-control" placeholder="Budget Amount in Rs." name="amount" value="{{request.form.amount}}">
+								<input class="btn btn-default" type="submit" name="submit" value="Login">
+							</form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				      </div>
+				    </div>
+
+				  </div>
+				</div>
+				
+			</li>
 			</ul>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="achievments">

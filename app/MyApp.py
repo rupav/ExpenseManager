@@ -1,26 +1,20 @@
 from flask import Flask, render_template, flash, request, url_for, redirect, session,  get_flashed_messages
-#from flask_compress import Compress
+from calendar import Calendar, HTMLCalendar
 from flask_sqlalchemy import SQLAlchemy
 from Forms.forms import RegistrationForm, LoginForm
-from Models._user import User, db, connect_to_db  #To make Models seperated folder!
+from Models._user import User, Budget, db, connect_to_db  #To make Models seperated folder!
 from content_manager import Content
 from passlib.hash import sha256_crypt
 from functools import wraps
 import gc, os
 
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 _database = 'sqlite:///'+file_path
-'''
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#app.config['SESSION_TYPE'] = 'sqlalchemy'
-app.config['TESTING'] = False
-db = SQLAlchemy(app)
-'''
 connect_to_db(app,_database)
-#Compress(app)
+
 
 TOPIC_DICT = Content()
 
@@ -70,12 +64,18 @@ def main():
 @app.route('/dashboard/',methods=['GET','POST'])
 @login_required
 def dashboard():
+	html_cal = HTMLCalendar()
+	html_code =  html_cal.formatmonth(2017, 12, True) 
 	try:
 		if request.method == 'POST':
-			pass
+			budget_amount = request.form['amount']
+			start_date = request.form['start_date']
+			#session['budget_id'] = foreign key
+			flash("Budget Set!")
+			return render_template('dashboard.html',TOPIC_DICT = TOPIC_DICT, html_code=html_code)
 		else:
 			flash("Welcome!")
-			return render_template('dashboard.html',TOPIC_DICT = TOPIC_DICT)
+			return render_template('dashboard.html',TOPIC_DICT = TOPIC_DICT, html_code=html_code)
 	except Exception as e:
 		return render_template('error.html',e=e)
 

@@ -4,7 +4,11 @@ import os
 db = SQLAlchemy()
 
 class User(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
+	""" This is the user """
+
+	#__tablename__ = "users"
+
+	id = db.Column(db.Integer,  autoincrement=True, primary_key=True)
 	username = db.Column(db.String(80))
 	email = db.Column(db.String(120))
 	password = db.Column(db.String(20))
@@ -12,7 +16,6 @@ class User(db.Model):
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
 
-'''
 class Category(db.Model):
     """ This is the category table """
 
@@ -20,19 +23,22 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     category = db.Column(db.String(64))
+
+
 class Budget(db.Model):
     """ This is the user's budget """
 
-    __tablename__ = "budget"
+    #__tablename__ = "budget"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     # the data type of the budget should match the data type of the price
     budget = db.Column(db.Numeric(15, 2))
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    budget_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    #category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    #budget_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
     budget_start_date = db.Column(db.DateTime)
     budget_end_date = db.Column(db.DateTime)
-
+    
+'''
     user = db.relationship("User", backref=db.backref('budget'))
 
     category = db.relationship("Category", backref=db.backref('budget'))
@@ -42,8 +48,8 @@ class Budget(db.Model):
 
         return "<Budget id=%s budget=%s budget_userid=%s category=%s budget_start_date=%s budget_end_date=%s>" % (
             self.id, self.budget, self.budget_userid, self.category, self.budget_start_date, self.budget_end_date)
-
-
+'''
+'''
 class Expenditure(db.Model):
     """ This contains expenditures """
 
