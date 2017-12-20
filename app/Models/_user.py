@@ -17,6 +17,7 @@ class User(db.Model):
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
 
+
 class Category(db.Model):
     """ This is the category table """
 
@@ -24,6 +25,8 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     category = db.Column(db.String(64))
+    category_daily = db.Column(db.Boolean, default=False)  # is it daily expense related, False implies, it can be both daily and monthly!?
+    category_primary =  db.Column(db.Boolean, default=False)  # if not true, it means , this category is added explicitly by user!
 
 
 class Budget(db.Model):
@@ -45,7 +48,8 @@ class Budget(db.Model):
 
         return "<Budget id=%s budget=%s budget_userid=%s budget_month=%s budget_year=%s>" % (
             self.id, self.budget_amount, self.budget_userid, self.budget_month, self.budget_year)
-'''
+
+
 class Expenditure(db.Model):
     """ This contains expenditures """
 
@@ -53,18 +57,16 @@ class Expenditure(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    price = db.Column(db.Numeric(15, 2))
+    spent = db.Column(db.Numeric(15, 2))
     date_of_expenditure = db.Column(db.DateTime)
     expenditure_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
-    where_bought = db.Column(db.String(100))
+    where_spent = db.Column(db.String(100))
     description = db.Column(db.UnicodeText)
-    tracking_num = db.Column(db.String, nullable=True)
-    tracking_num_carrier = db.Column(db.String(100), nullable=True)
 
     user = db.relationship("User", backref=db.backref('expenditures'))
 
     category = db.relationship("Category", backref=db.backref('expenditures'))
-'''
+
 
 def connect_to_db(app, spent_database):
     """ Connect the database to our Flask app. """

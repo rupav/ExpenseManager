@@ -8,7 +8,12 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
     <li role="presentation"><a href="#budget" aria-controls="budget" role="tab" data-toggle="tab">Budget</a></li>
-    <li role="presentation"><a href="#expense" aria-controls="expense" role="tab" data-toggle="tab">Expense</a></li>
+    <li class="dropdown" role="presentation"><a class="dropdown-toggle" data-toggle="dropdown" href="#expense">Expenses<span class="caret"></span></a>
+	    <ul class="dropdown-menu">
+	      <li><a href="#daily_expense" aria-controls="daily_expense" role="tab" data-toggle="tab">Daily</a></li>
+	      <li><a href="#monthly_expense" aria-controls="monthly_expense" role="tab" data-toggle="tab">Monthly</a></li>
+	     </ul>
+    </li>
     <li role="presentation"><a href="#recommend" aria-controls="recommend" role="tab" data-toggle="tab">Recommendation</a></li>
   </ul>
   <!-- Tab panes -->
@@ -25,7 +30,7 @@
 				<!-- Trigger the modal with a button -->
 				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Edit Budget</button>
 
-				<!-- Modal -->
+   				<!-- Modal -->
 				<div id="myModal" class="modal fade" role="dialog">
 				  <div class="modal-dialog modal-lg">
 
@@ -53,10 +58,93 @@
 				
 			</ul>
 		</div>
-		<div role="tabpanel" class="tab-pane" id="expense">
+		<div role="tabpanel" class="tab-pane" id="daily_expense">
 			<div class="card" style="-moz-transition: all 5s; display: inline-block; cursor: pointer; overflow: hidden;background: green; -moz-transform:scale(1.19); text-shadow: red;"  >
 				<h3>Hi</h3>
 			</div>
+			<ul>
+		    	{% for cat in CATS["Daily"] %}
+		    		<br>
+		    		<div class="container-fluid" >
+		    			<p id="cat_daily">
+		    			{{cat}} 
+						<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-trash"  style="float:right;" ></span></button>
+		    			<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-ok"  style="float:right;" ></span> </button>
+		    			<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#ModalEditDaily" style="float:right;"><span class="glyphicon glyphicon-edit"></span></button> 
+		    			</p>
+		    		</div>
+		    		<!-- Modal -->
+					<div id="ModalEditDaily" class="modal fade" role="dialog">
+					  <div class="modal-dialog modal-md">
+
+					    <!-- Modal content-->
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal">&times;</button>
+					        <h4 class="modal-title">{{cat}}</h4>
+					      </div>
+					      <div class="modal-body">
+					          <h1>Spent on {{cat}} today!</h1>
+					          	<form action="" class="form-inline" method="post">
+									<input type="text" class="form-control" placeholder="Amount in Rs." name="amount" value="{{request.form.amount}}">
+									<input type="text" class="form-control" placeholder="Location" name="location" value="{{request.form.location}}">
+									<input type="text" class="form-control" placeholder="Comments" name="comment" value="{{request.form.comment}}" maxlength="140" size="40">
+									<input class="btn btn-default" type="submit" name="submit" value="Set {{cat}} amount">
+								</form>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					      </div>
+					    </div>
+
+					  </div>
+				</div>
+
+		    	{% endfor %}
+		    </ul>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="monthly_expense">
+			<ul>
+		    	{% for cat in CATS["Monthly"] %}
+		    		<br>
+		    		<div class="container-fluid" >
+		    			<p id="cat_daily">
+		    			{{cat}} 
+						<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-trash"  style="float:right; " ></span></button>
+		    			<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-ok" style="float:right; " ></span> </button>
+		    			<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#ModalEdit" style="float:right; "><span class="glyphicon glyphicon-edit"></span></button> 
+		    			</p>
+		    		</div>
+
+		    		<!-- Modal -->
+					<div id="ModalEdit" class="modal fade" role="dialog">
+					  <div class="modal-dialog modal-md">
+
+					    <!-- Modal content-->
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal">&times;</button>
+					        <h4 class="modal-title">{{cat}}</h4>
+					      </div>
+					      <div class="modal-body">
+					          <h1>Spent for {{cat}}!</h1>
+					          	<form action="" class="form-inline" method="post">
+									<input type="text" class="form-control" placeholder="Amount in Rs." name="amount" value="{{request.form.amount}}">
+									<input type="text" class="form-control" placeholder="Location" name="location" value="{{request.form.location}}">
+									<input type="text" class="form-control" placeholder="Comments" name="comment" value="{{request.form.comment}}" maxlength="140" size="40">
+									<input class="btn btn-default" type="submit" name="submit" value="Set {{cat}} amount">
+								</form>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					      </div>
+					    </div>
+
+					  </div>
+				</div>
+
+		    	{% endfor %}
+		    </ul>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="recommend"></div>
 	</div>
