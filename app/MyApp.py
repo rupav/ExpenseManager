@@ -6,6 +6,7 @@ from Models._user import User, Budget, db, connect_to_db  #To make Models sepera
 from content_manager import Content
 from passlib.hash import sha256_crypt
 from functools import wraps
+from datetime import datetime
 import gc, os
 
 
@@ -65,12 +66,22 @@ def main():
 @login_required
 def dashboard():
 	html_cal = HTMLCalendar()
-	html_code =  html_cal.formatmonth(2017, 12, True) 
+	html_code =  html_cal.formatmonth(datetime.today().year, datetime.today().month, True) 
 	try:
 		if request.method == 'POST':
-			budget_amount = request.form['amount']
-			start_date = request.form['start_date']
-			#session['budget_id'] = foreign key
+			username = session['username']
+			_budget_userid = User.query.filter_by(username = username).first().id 
+			_budget_amount = request.form['amount']
+			_budget_month = datetime.today().month
+			_budget_year = datetime.today().year
+			budget_object = Budget(budget_userid = _budget_userid, budget_year = _budget_year, budget_month = _budget_month,  budget_amount = _budget_amount)
+			db.session.add(budget_object)
+			db.session.commit()
+			session['current_budget_id'] = budget_object.id
+			flash(session['current_budget_id'])
+			flash(_budget_userid)
+			db.session.close()
+			gc.collect()
 			flash("Budget Set!")
 			return render_template('dashboard.html',TOPIC_DICT = TOPIC_DICT, html_code=html_code)
 		else:
@@ -109,6 +120,7 @@ def register_page():
 			_github_username = form.github_username.data
 			_email = form.email.data
 			_password = sha256_crypt.encrypt(str(form.password.data))
+			flash(form.example.data)
 			user = User(username = _username, github_username = _github_username, email = _email, password = _password)
 			db.create_all()
 			if User.query.filter_by(username=_username).first() is not None:
@@ -150,5 +162,5 @@ def page_not_found(e):
 	return render_template('error.html',e=e)
 
 if __name__ == "__main__":
-	db.creat_all()
+	db.create_all()
 	app.run(debug=True)

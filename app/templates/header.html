@@ -10,17 +10,8 @@
 
 	<header>
 	  	<div class="container-fluid">
-		  	<div class="nav navbar-nav navbar-right">
+			<div class="nav navbar-nav navbar-right">
 	    		<div style="margin-right: 10px; margin-left: 15px; margin-top: 5px; margin-bottom: 5px;"  class="container-fluid">
-					{% with messages = get_flashed_messages() %}
-						{% if messages %}
-							<ul class=flashes>
-								{% for message in messages %}
-								<li>{{ message }}</li>
-							{% endfor %}
-						</ul>
-						{% endif %}
-					{% endwith %}
 					<h5>
 						<a href="{{ url_for('main') }}"> <span class="glyphicon glyphicon-home"></span> Home </a>
 						{% if session.logged_in %}
@@ -37,6 +28,18 @@
 
     <body>
     	<div class="container-fluid" style = "min-height:100%; width:60%;">
+
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						{{message}}
+					</div>
+				{% endfor %}
+			{% endif %}
+		{%endwith%}
+		
     	{% block body %}{% endblock %}
     	</div>	
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

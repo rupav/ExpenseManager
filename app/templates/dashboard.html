@@ -8,8 +8,8 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
     <li role="presentation"><a href="#budget" aria-controls="budget" role="tab" data-toggle="tab">Budget</a></li>
-    <li role="presentation"><a href="#achievments" aria-controls="achievments" role="tab" data-toggle="tab">Expense</a></li>
-    <li role="presentation"><a href="#work" aria-controls="work" role="tab" data-toggle="tab">Recommendation</a></li>
+    <li role="presentation"><a href="#expense" aria-controls="expense" role="tab" data-toggle="tab">Expense</a></li>
+    <li role="presentation"><a href="#recommend" aria-controls="recommend" role="tab" data-toggle="tab">Recommendation</a></li>
   </ul>
   <!-- Tab panes -->
    <div class="tab-content">
@@ -21,10 +21,9 @@
 		<div role="tabpanel" class="tab-pane" id="budget">
 			<ul>
 			<br>
-			<li>
-			
+					
 				<!-- Trigger the modal with a button -->
-				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Calendar</button>
+				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Edit Budget</button>
 
 				<!-- Modal -->
 				<div id="myModal" class="modal fade" role="dialog">
@@ -40,9 +39,8 @@
 				          <h3>{{ html_code|safe }}</h3>
 				          <h1>Set Budget for this month!</h1>
 				          	<form action="" class="form-inline" method="post">
-				          		<input type="text" name="start_date" class="form-control" placeholder="1/1/17" value="{{request.form.start_date}}">
 								<input type="text" class="form-control" placeholder="Budget Amount in Rs." name="amount" value="{{request.form.amount}}">
-								<input class="btn btn-default" type="submit" name="submit" value="Login">
+								<input class="btn btn-default" type="submit" name="submit" value="Set Budget">
 							</form>
 				      </div>
 				      <div class="modal-footer">
@@ -53,13 +51,14 @@
 				  </div>
 				</div>
 				
-			</li>
 			</ul>
 		</div>
-		<div role="tabpanel" class="tab-pane" id="achievments">
-			
+		<div role="tabpanel" class="tab-pane" id="expense">
+			<div class="card" style="-moz-transition: all 5s; display: inline-block; cursor: pointer; overflow: hidden;background: green; -moz-transform:scale(1.19); text-shadow: red;"  >
+				<h3>Hi</h3>
+			</div>
 		</div>
-		<div role="tabpanel" class="tab-pane" id="work"></div>
+		<div role="tabpanel" class="tab-pane" id="recommend"></div>
 	</div>
 
 </div>

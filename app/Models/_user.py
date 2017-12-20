@@ -6,10 +6,11 @@ db = SQLAlchemy()
 class User(db.Model):
 	""" This is the user """
 
-	#__tablename__ = "users"
+	__tablename__ = "users"
 
 	id = db.Column(db.Integer,  autoincrement=True, primary_key=True)
 	username = db.Column(db.String(80))
+	github_username = db.Column(db.String(80))
 	email = db.Column(db.String(120))
 	password = db.Column(db.String(20))
 
@@ -28,27 +29,22 @@ class Category(db.Model):
 class Budget(db.Model):
     """ This is the user's budget """
 
-    #__tablename__ = "budget"
+    __tablename__ = "budget"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     # the data type of the budget should match the data type of the price
-    budget = db.Column(db.Numeric(15, 2))
-    #category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    #budget_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
-    budget_start_date = db.Column(db.DateTime)
-    budget_end_date = db.Column(db.DateTime)
-    
-'''
-    user = db.relationship("User", backref=db.backref('budget'))
+    budget_amount = db.Column(db.Numeric(15, 2))
+    budget_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    budget_month = db.Column(db.Integer) 
+    budget_year = db.Column(db.Integer)
 
-    category = db.relationship("Category", backref=db.backref('budget'))
+    user = db.relationship("User", backref=db.backref('budget'))
 
     def __repr__(self):
         """ Provide useful info """
 
-        return "<Budget id=%s budget=%s budget_userid=%s category=%s budget_start_date=%s budget_end_date=%s>" % (
-            self.id, self.budget, self.budget_userid, self.category, self.budget_start_date, self.budget_end_date)
-'''
+        return "<Budget id=%s budget=%s budget_userid=%s budget_month=%s budget_year=%s>" % (
+            self.id, self.budget_amount, self.budget_userid, self.budget_month, self.budget_year)
 '''
 class Expenditure(db.Model):
     """ This contains expenditures """
