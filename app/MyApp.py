@@ -8,6 +8,7 @@ from passlib.hash import sha256_crypt
 from functools import wraps
 from datetime import datetime
 import gc, os
+import pygal
 
 
 app = Flask(__name__)
@@ -61,6 +62,13 @@ def initialize_categories():
 		return True
 	return False
 
+def pie_chart(_categories, _values, _title='Expenditure'):
+	pie_chart = pygal.Pie()
+	pie_chart.title = _title
+	for cat, val in zip(_categories, _values):
+		pie_chart.add(cat, val)
+	return pie_chart.render_data_uri()
+
 @app.route('/logout/')
 @login_required
 def logout():
@@ -79,6 +87,19 @@ def verify(_username, _password):
 		return False
 	return True
 
+def calculate_expenditure(category_id, userid, today= True):
+	sum = 0
+	if today:
+		for obj in Expenditure.query.filter_by(expenditure_userid= userid).all():
+			if obj.category_id == category_id and obj.date_of_expenditure.day == datetime.today().day:
+				sum += obj.spent
+		return sum
+	else:
+		for obj in Expenditure.query.filter_by(expenditure_userid= userid).all():
+			if obj.category_id == category_id:
+				sum += obj.spent
+		return sum
+
 @app.route('/', methods=['GET','POST'])
 def main():
 	#app.logger.debug(get_flashed_messages())
@@ -88,7 +109,10 @@ def main():
 @login_required
 def dashboard():
 	html_cal = HTMLCalendar()
-	html_code =  html_cal.formatmonth(datetime.today().year, datetime.today().month, True) 
+	html_code =  html_cal.formatmonth(datetime.today().year, datetime.today().month, True)
+	username = session['username']
+	pie_data = pie_chart([cat for cat in CATS['Daily']], [calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()] )
+
 	try:
 		if request.method == 'POST':
 			initialize_categories()
@@ -107,6 +131,7 @@ def dashboard():
 				db.session.close()
 				gc.collect()
 				flash("Budget Set!")
+			
 			for key in CATS.keys():
 				for cat in CATS[key]:
 					if request.form['submit'] == "Set {} amount".format(cat):
@@ -124,8 +149,10 @@ def dashboard():
 						gc.collect()
 						flash("Expenditure recorded of {}!".format(cat))
 						if Category.query.filter_by(category = cat).first().category_daily == True:
+							flash(calculate_expenditure(_category_id, _expenditure_userid, True))
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True)
 						else:
+							flash(calculate_expenditure(_category_id, _expenditure_userid, False))
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False)
 					
 			
@@ -133,7 +160,7 @@ def dashboard():
 		else:
 			flash("Welcome!")
 			#flash(db.session.query(Budget).all()[-1])
-			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
+			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', pie_data = pie_data)
 	except Exception as e:
 		return render_template('error.html',e=e)
 

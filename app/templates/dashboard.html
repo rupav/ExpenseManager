@@ -146,7 +146,13 @@
 		    	{% endfor %}
 		    </ul>
 		</div>
-		<div role="tabpanel" class="tab-pane" id="recommend"></div>
+		<div role="tabpanel" class="tab-pane" id="recommend">
+			<body>
+				<div class="container" align="right">
+					<embed type="image/svg+xml" src={{pie_data|safe}} style='max_width:1000px'/>	
+				</div>
+			</body>
+		</div>
 	</div>
 
 </div>

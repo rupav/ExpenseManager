@@ -57,7 +57,7 @@ class Expenditure(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    spent = db.Column(db.Numeric(15, 2))
+    spent = db.Column(db.Numeric(15, 2), default=0)
     date_of_expenditure = db.Column(db.DateTime)
     expenditure_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
     where_spent = db.Column(db.String(100))
