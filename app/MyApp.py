@@ -27,7 +27,7 @@ def admin_access_required(f):
 		if session['username'] == 'admin':
 			return f(*args, **kwargs)
 		else:
-			flash("Access Denied, login as admin")
+			flash("Access Denied, login as admin", "danger")
 			return redirect(url_for('login_page'))
 	return wrap
 
@@ -37,7 +37,7 @@ def login_required(f):
 		if 'logged_in' in session:
 			return f(*args,*kwargs)
 		else:
-			flash('You need to login first!')
+			flash('You need to login first!', "warning")
 			return redirect(url_for('login_page'))
 	return wrap
 
@@ -58,7 +58,7 @@ def initialize_categories():
 		db.session.commit()
 		db.session.close()
 		gc.collect()
-		flash("Categories Initialized!")
+		flash("Categories Initialized!", "success")
 		return True
 	return False
 
@@ -72,18 +72,17 @@ def pie_chart(_categories, _values, _title='Expenditure'):
 @app.route('/logout/')
 @login_required
 def logout():
-	flash("You have been logged out!")
+	flash("You have been logged out!", "success")
 	session.clear()
-	flash("You have been logged out!")
 	gc.collect()
 	return redirect(url_for('main'))
 
 def verify(_username, _password):
 	if User.query.filter_by(username=_username).first() is None:
-		flash("No such user found with this username")
+		flash("No such user found with this username", "warning")
 		return False
 	if not sha256_crypt.verify(_password, User.query.filter_by(username=_username).first().password):
-		flash("Invalid Credentials, password isn't correct!")
+		flash("Invalid Credentials, password isn't correct!", "danger")
 		return False
 	return True
 
@@ -130,7 +129,7 @@ def dashboard():
 				flash(_budget_userid)
 				db.session.close()
 				gc.collect()
-				flash("Budget Set!")
+				flash("Budget Set!", "success")
 			
 			for key in CATS.keys():
 				for cat in CATS[key]:
@@ -149,16 +148,16 @@ def dashboard():
 						gc.collect()
 						flash("Expenditure recorded of {}!".format(cat))
 						if Category.query.filter_by(category = cat).first().category_daily == True:
-							flash(calculate_expenditure(_category_id, _expenditure_userid, True))
+							flash(calculate_expenditure(_category_id, _expenditure_userid, True), "default")
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True)
 						else:
-							flash(calculate_expenditure(_category_id, _expenditure_userid, False))
+							flash(calculate_expenditure(_category_id, _expenditure_userid, False), "default")
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False)
 					
 			
 			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
 		else:
-			flash("Welcome!")
+			flash("Welcome!","default")
 			#flash(db.session.query(Budget).all()[-1])
 			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', pie_data = pie_data)
 	except Exception as e:
@@ -198,15 +197,15 @@ def register_page():
 			user = User(username = _username, github_username = _github_username, email = _email, password = _password)
 			db.create_all()
 			if User.query.filter_by(username=_username).first() is not None:
-				flash('User Already registered with github username {}'.format(User.query.filter_by(username=_username).first().github_username))
+				flash('User Already registered with github username {}'.format(User.query.filter_by(username=_username).first().github_username), "warning")
 				return render_template('register.html', form=form)
 			if User.query.filter_by(email=_email).first() is not None:
-				flash('Email is already registered with us with github username {}'.format(User.query.filter_by(email=_email).first().username))
+				flash('Email is already registered with us with github username {}'.format(User.query.filter_by(email=_email).first().username), "warning")
 				return render_template('register.html', form=form)
 			if User.query.filter_by(github_username=_github_username).first() is not None:
-				flash('Email is already registered with us with github username {}'.format(User.query.filter_by(github_username=_github_username).first().username))
+				flash('User is already registered with us with username {}'.format(User.query.filter_by(github_username=_github_username).first().username), "warning")
 				return render_template('register.html', form=form)		
-			flash("Thank you for registering!")
+			flash("Thank you for registering!", "success")
 
 			db.session.add(user)
 			db.session.commit()
@@ -225,7 +224,7 @@ def register_page():
 @admin_access_required
 def database():
 	try:
-		return render_template('databse.html',data= User.query.first())
+		return render_template('database.html',data= User.query.all())
 	except Exception as e:
 		return render_template('error.html',e=e)		
 

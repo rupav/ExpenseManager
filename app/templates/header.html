@@ -29,10 +29,10 @@
     <body>
     	<div class="container-fluid" style = "min-height:100%; width:60%;">
 
-		{% with messages = get_flashed_messages() %}
+		{% with messages = get_flashed_messages(with_categories=true) %}
 			{% if messages %}
-				{% for message in messages %}
-					<div class="alert alert-success alert-dismissible" role="alert">
+				{% for category, message in messages %}
+					<div {% if category == 'success' %} class="alert alert-success alert-dismissible" {% elif category == 'warning' %} class="alert alert-warning alert-dismissible" {% elif category == 'danger' %} class="alert alert-danger alert-dismissible" {% else %} class="alert alert-info alert-dismissible" {% endif %} role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						{{message}}
 					</div>
