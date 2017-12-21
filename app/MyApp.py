@@ -107,29 +107,33 @@ def dashboard():
 				db.session.close()
 				gc.collect()
 				flash("Budget Set!")
-			
-			for cat in CATS['Daily']:
-				if request.form['submit'] == "Set {} amount".format(cat):
-					username = session['username']
-					_expenditure_userid = User.query.filter_by(username = username).first().id
-					_spent = request.form['amount']
-					_where_spent = request.form['location']
-					_category_id = Category.query.filter_by(category = cat).first().id
-					_date_of_expenditure = datetime.today()
-					_description = request.form['comment']
-
-					expenditure_object = Expenditure(expenditure_userid = _expenditure_userid, spent = _spent, where_spent= _where_spent, category_id = _category_id, date_of_expenditure = _date_of_expenditure, description = _description)
-					db.session.add(expenditure_object)
-					db.session.commit()
-					db.session.close()
-					gc.collect()
+			for key in CATS.keys():
+				for cat in CATS[key]:
+					if request.form['submit'] == "Set {} amount".format(cat):
+						username = session['username']
+						_expenditure_userid = User.query.filter_by(username = username).first().id
+						_spent = request.form['amount']
+						_where_spent = request.form['location']
+						_category_id = Category.query.filter_by(category = cat).first().id
+						_date_of_expenditure = datetime.today()
+						_description = request.form['comment']
+						expenditure_object = Expenditure(expenditure_userid = _expenditure_userid, spent = _spent, where_spent= _where_spent, category_id = _category_id, date_of_expenditure = _date_of_expenditure, description = _description)
+						db.session.add(expenditure_object)
+						db.session.commit()
+						db.session.close()
+						gc.collect()
+						flash("Expenditure recorded of {}!".format(cat))
+						if Category.query.filter_by(category = cat).first().category_daily == True:
+							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True)
+						else:
+							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False)
 					
 			
-			return render_template('dashboard.html',CATS = CATS, html_code=html_code)
+			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
 		else:
 			flash("Welcome!")
 			#flash(db.session.query(Budget).all()[-1])
-			return render_template('dashboard.html',CATS = CATS, html_code=html_code)
+			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
 	except Exception as e:
 		return render_template('error.html',e=e)
 

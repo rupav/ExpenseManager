@@ -1,3 +1,4 @@
+
 {% extends "header.html" %}
 
 
@@ -6,9 +7,9 @@
 <div class="container-fluid">
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" {% if active_tab == 'Home' %} class="active" {% endif %}><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
     <li role="presentation"><a href="#budget" aria-controls="budget" role="tab" data-toggle="tab">Budget</a></li>
-    <li class="dropdown" role="presentation" {% if active_tab == 'expense' %} class="active" {% endif %} ><a class="dropdown-toggle" data-toggle="dropdown" href="#expense">Expenses<span class="caret"></span></a>
+    <li class="dropdown" role="presentation"><a class="dropdown-toggle" data-toggle="dropdown" href="#expense">Expenses<span class="caret"></span></a>
 	    <ul class="dropdown-menu">
 	      <li><a href="#daily_expense" aria-controls="daily_expense" role="tab" data-toggle="tab">Daily</a></li>
 	      <li><a href="#monthly_expense" aria-controls="monthly_expense" role="tab" data-toggle="tab">Monthly</a></li>
@@ -18,7 +19,7 @@
   </ul>
   <!-- Tab panes -->
    <div class="tab-content">
-	   <div role="tabpanel" {% if active_tab == 'Home' %} class="tab-pane active" {% else %} class="tab-pane" {% endif %} id="home">
+	   <div role="tabpanel" class="tab-pane active" id="home">
 			<ul>
 				<h3>Welcome {{ session.username }}!</h3>
 			</ul>
@@ -58,7 +59,7 @@
 				
 			</ul>
 		</div>
-		<div role="tabpanel" {% if active_tab == 'expense' and isDaily == True %} class="tab-pane active" {% else %} class="tab-pane" {% endif %} id="daily_expense">
+		<div role="tabpanel" class="tab-pane" id="daily_expense">
 			<div class="card" style="-moz-transition: all 5s; display: inline-block; cursor: pointer; overflow: hidden;background: green; -moz-transform:scale(1.19); text-shadow: red;"  >
 				<h3>Hi</h3>
 			</div>
@@ -75,7 +76,7 @@
 		    		</div>
 		    		<!-- Modal -->
 					<div id="ModalEditDaily{{loop.index}}" class="modal fade" role="dialog">
-					  <div class="modal-dialog modal-lg">
+					  <div class="modal-dialog modal-md">
 
 					    <!-- Modal content-->
 					    <div class="modal-content">
@@ -103,7 +104,7 @@
 		    	{% endfor %}
 		    </ul>
 		</div>
-		<div role="tabpanel" {% if active_tab == 'expense' and isDaily == False %} class="tab-pane active" {% else %} class="tab-pane" {% endif %} id="monthly_expense">
+		<div role="tabpanel" class="tab-pane" id="monthly_expense">
 			<ul>
 		    	{% for cat in CATS["Monthly"] %}
 		    		<br>
@@ -118,7 +119,7 @@
 
 		    		<!-- Modal -->
 					<div id="ModalEditMonthly{{loop.index}}" class="modal fade" role="dialog">
-					  <div class="modal-dialog modal-lg">
+					  <div class="modal-dialog modal-md">
 
 					    <!-- Modal content-->
 					    <div class="modal-content">
@@ -132,7 +133,7 @@
 									<input type="text" class="form-control" placeholder="Amount in Rs." name="amount" value="{{request.form.amount}}">
 									<input type="text" class="form-control" placeholder="Location" name="location" value="{{request.form.location}}">
 									<input type="text" class="form-control" placeholder="Comments" name="comment" value="{{request.form.comment}}" maxlength="140" size="40"  >
-									<input  class="btn btn-default" type="submit" name="submit" value="Set {{cat}} amount">
+									<input class="btn btn-default" type="submit" name="submit" value="Set {{cat}} amount">
 								</form>
 					      </div>
 					      <div class="modal-footer">
@@ -152,5 +153,3 @@
 </div>
 
 {% endblock %}
-
-
