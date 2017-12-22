@@ -63,11 +63,38 @@ def initialize_categories():
 	return False
 
 def pie_chart(_categories, _values, _title='Expenditure'):
-	pie_chart = pygal.Pie()
+	pie_chart = pygal.Pie(width=800, height=400)
 	pie_chart.title = _title
 	for cat, val in zip(_categories, _values):
 		pie_chart.add(cat, val)
 	return pie_chart.render_data_uri()
+
+def gauge_chart(title_list, val_list, max_valList):
+	
+	gauge = pygal.SolidGauge(
+    half_pie=True, inner_radius=0.70,
+    style=pygal.style.styles['default'](value_font_size=10))
+
+	percent_formatter = lambda x: '{:.10g}%'.format(x)
+	rupees_formatter = lambda x: '{:.10g} Rs'.format(x)
+	gauge.value_formatter = rupees_formatter
+
+	for title, val, max_val in zip(title_list, val_list, max_valList):
+		if max_val == 0:
+			max_val = 1
+		gauge.add(title, [{'value': int(val), 'max_value': int(max_val)}])
+
+	return gauge.render_data_uri()
+
+def convert_toPercent(_list):
+	''' accepts a list and returns the list '''
+	a = sum(_list)
+	_new_list = []
+	if a != 0:
+		for i in _list:
+			_new_list.append((i/a)*100)
+		return _new_list
+	return _list
 
 @app.route('/logout/')
 @login_required
@@ -95,9 +122,22 @@ def calculate_expenditure(category_id, userid, today= True):
 		return sum
 	else:
 		for obj in Expenditure.query.filter_by(expenditure_userid= userid).all():
-			if obj.category_id == category_id:
+			if obj.date_of_expenditure.month == datetime.today().month and obj.category_id == category_id:
 				sum += obj.spent
 		return sum
+
+def calculate_expenditureBudget_month(userid, month):
+	#month should be in range (1,12]
+	sum_expense = 0
+	sum_budget = 0
+	for obj in Expenditure.query.filter_by(expenditure_userid= userid).all():
+		if obj.date_of_expenditure.month == month:
+			sum_expense += obj.spent
+	for obj in Budget.query.filter_by(budget_userid= userid).all():
+		if obj.budget_year == datetime.today().year and obj.budget_month == month:
+			sum_budget += obj.budget_amount
+	return sum_expense, sum_budget
+
 
 @app.route('/', methods=['GET','POST'])
 def main():
@@ -110,7 +150,12 @@ def dashboard():
 	html_cal = HTMLCalendar()
 	html_code =  html_cal.formatmonth(datetime.today().year, datetime.today().month, True)
 	username = session['username']
-	pie_data = pie_chart([cat for cat in CATS['Daily']], [calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()] )
+	pie_data = [pie_chart([cat for cat in CATS['Daily'] + CATS['Monthly']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()]), "My Expenditure Distribution this Month."), 
+	            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in Category.query.all()]) , "My Expenditure Distribution today!")]
+	months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+	l = [calculate_expenditureBudget_month(userid=User.query.filter_by(username=username).first().id, month = month) for month in range(1,13)]
+	exp, budg =  zip(*l)
+	gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
 
 	try:
 		if request.method == 'POST':
@@ -133,7 +178,7 @@ def dashboard():
 			
 			for key in CATS.keys():
 				for cat in CATS[key]:
-					if request.form['submit'] == "Set {} amount".format(cat):
+					if request.form['submit'] == "Set {} amount".format(cat):						
 						username = session['username']
 						_expenditure_userid = User.query.filter_by(username = username).first().id
 						_spent = request.form['amount']
@@ -147,19 +192,26 @@ def dashboard():
 						db.session.close()
 						gc.collect()
 						flash("Expenditure recorded of {}!".format(cat))
+
+						pie_data = [pie_chart([cat for cat in CATS['Daily'] + CATS['Monthly']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()]), "My Expenditure Distribution this Month."), 
+						            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in Category.query.all()]) , "My Expenditure Distribution today!")]
+
+						l = [calculate_expenditureBudget_month(userid=User.query.filter_by(username=username).first().id, month = month) for month in range(1,13)]
+						exp, budg =  zip(*l)
+						gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
+	
 						if Category.query.filter_by(category = cat).first().category_daily == True:
 							flash(calculate_expenditure(_category_id, _expenditure_userid, True), "default")
-							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True)
+							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
 						else:
 							flash(calculate_expenditure(_category_id, _expenditure_userid, False), "default")
-							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False)
+							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False, pie_data = pie_data, gauge_data = gauge_data)
 					
 			
 			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
 		else:
 			flash("Welcome!","default")
-			#flash(db.session.query(Budget).all()[-1])
-			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', pie_data = pie_data)
+			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', pie_data = pie_data, gauge_data = gauge_data)
 	except Exception as e:
 		return render_template('error.html',e=e)
 

@@ -147,16 +147,27 @@
 		    </ul>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="recommend">
-			<body>
-				<div class="container" align="right">
-					<embed type="image/svg+xml" src={{pie_data|safe}} style='max_width:1000px'/>	
+			{% for pie in pie_data %}
+				<div class="container-fluid">
+					<br>
+					<embed type="image/svg+xml" src={{pie|safe}}>	
 				</div>
-			</body>
+			{% endfor %}
+			<br>
+			<h3>My Expenditure and Budget comparison </h3>
+				<div class="container-fluid">
+					<br>
+					<embed type="image/svg+xml" src={{gauge_data|safe}}>	
+				</div>
+			<h4><b>Note:</b> 0 expenditure and 1 budget value implies, you haven't set the budget and expenses for that month!</h4>
+			<br>
+			<br>
+			<br>
+
 		</div>
 	</div>
 
 </div>
-
 {% endblock %}
 
 
