@@ -32,7 +32,6 @@ cssselect==1.0.1
 cycler==0.10.0
 Cython==0.26
 cytoolz==0.8.2
-datashape==0.5.4
 decorator==4.1.2
 defusedxml==0.5.0
 dicttoxml==1.7.4
