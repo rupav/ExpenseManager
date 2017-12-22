@@ -41,6 +41,16 @@ def login_required(f):
 			return redirect(url_for('login_page'))
 	return wrap
 
+def already_logged_in(f):
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		if 'logged_in' in session:
+			flash("You are already logged in!", "success")
+			return redirect(url_for('dashboard'))
+		else:
+			return f(*args, **kwargs)
+	return wrap
+
 def initialize_categories():
 	#check if its not created yet!
 	if Category.query.first() == None:
@@ -199,7 +209,7 @@ def dashboard():
 						l = [calculate_expenditureBudget_month(userid=User.query.filter_by(username=username).first().id, month = month) for month in range(1,13)]
 						exp, budg =  zip(*l)
 						gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
-	
+
 						if Category.query.filter_by(category = cat).first().category_daily == True:
 							flash(calculate_expenditure(_category_id, _expenditure_userid, True), "default")
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
@@ -216,6 +226,7 @@ def dashboard():
 		return render_template('error.html',e=e)
 
 @app.route('/login/', methods=['GET','POST'])
+@already_logged_in
 def login_page():
 	try:
 		form = LoginForm(request.form)
