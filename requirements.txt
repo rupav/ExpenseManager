@@ -22,7 +22,6 @@ chardet==3.0.4
 ciso8601==1.0.3
 click==6.7
 cloudpickle==0.4.0
-clyent==1.2.2
 colorama==0.3.9
 comtypes==1.1.2
 conda==4.3.30
