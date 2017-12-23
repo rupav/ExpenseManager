@@ -3,7 +3,7 @@ from calendar import Calendar, HTMLCalendar
 from flask_sqlalchemy import SQLAlchemy 
 from Forms.forms import RegistrationForm, LoginForm
 from Models._user import User, Budget, Category, Expenditure, db, connect_to_db 
-from content_manager import Content, CategoriesText
+from content_manager import CategoriesText
 from passlib.hash import sha256_crypt
 from functools import wraps
 from datetime import datetime
