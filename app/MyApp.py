@@ -172,11 +172,21 @@ def dashboard():
 	exp, budg =  zip(*l)
 	gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
 
+	_budg = budg[datetime.today().month - 1]
+	_exp = exp[datetime.today().month - 1]
+	if _budg > 1:
+		if _exp > _budg:
+			flash("You have exceeded your budget limit this month by {} Rs.".format(exp-budget),"danger")
+		elif _exp == _budg:
+			flash("Expenses equalled to budget this month, time to stop spending","warning")
+		else:
+			flash("Keep spending, you have {} Rs. to spend".format(_budg - _exp),"success")
+
 	try:
 		if request.method == 'POST':
 			initialize_categories()
+			username = session['username']
 			if request.form['submit'] == "Set Budget":
-				username = session['username']
 				_budget_userid = User.query.filter_by(username = username).first().id
 				flag = 0
 				
@@ -211,8 +221,7 @@ def dashboard():
 			
 			for key in CATS.keys():
 				for cat in CATS[key]:
-					if request.form['submit'] == "Set {} amount".format(cat):						
-						username = session['username']
+					if request.form['submit'] == "Set {} amount".format(cat):
 						_expenditure_userid = User.query.filter_by(username = username).first().id
 						_spent = request.form['amount']
 						_where_spent = request.form['location']
