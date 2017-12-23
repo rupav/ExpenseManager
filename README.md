@@ -19,8 +19,8 @@ Open git terminal(Git bash in windows), and clone your forked repo i.e. `git clo
 
 # To Do:
 
-1. Deploy app on heroku (which I tried, but I need to shift to postgresql from sqlite which is creating error which are yet to be solved, need some time)
-2. Use Bokeh instead of pygal for data visualization.
+1. Deploy app on heroku (which I tried, but I need to shift to postgresql from sqlite which is creating errors which are yet to be solved 😫, need some time). (Sorry for inconvenience caused) 
+2. Use Bokeh ✨ instead of pygal for data visualization.
 3. Plotting of purchase location of a user in a map.
 4. Add more features to the app like,providing a option to add a new category, use Wordnet to automatically add expenditure of a user in one of the pre-defined categories by comments.
 5. Comparision of a user with average users in terms of budget and expenditure.
