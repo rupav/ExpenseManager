@@ -177,17 +177,37 @@ def dashboard():
 			initialize_categories()
 			if request.form['submit'] == "Set Budget":
 				username = session['username']
-				_budget_userid = User.query.filter_by(username = username).first().id 
-				_budget_amount = request.form['amount']
-				_budget_month = datetime.today().month
-				_budget_year = datetime.today().year
-				budget_object = Budget(budget_userid = _budget_userid, budget_year = _budget_year, budget_month = _budget_month,  budget_amount = _budget_amount)
-				db.session.add(budget_object)
-				db.session.commit()
-				session['current_budget_id'] = budget_object.id
-				db.session.close()
-				gc.collect()
-				flash("Budget Set!", "success")
+				_budget_userid = User.query.filter_by(username = username).first().id
+				flag = 0
+				
+				for obj in Budget.query.filter_by(budget_userid= _budget_userid).all():
+					if obj.budget_year == datetime.today().year and obj.budget_month == datetime.today().month:
+						flash("Budget successfully changed for this month! from {} to {}".format(obj.budget_amount , request.form['amount'], ), "success")
+						obj.budget_amount = request.form['amount']
+						db.session.commit()
+						db.session.close()
+						gc.collect()
+						flag = 1
+					# now don't need to create object again.
+				
+				if flag == 0:
+					_budget_amount = request.form['amount']
+					_budget_month = datetime.today().month
+					_budget_year = datetime.today().year
+					budget_object = Budget(budget_userid = _budget_userid, budget_year = _budget_year, budget_month = _budget_month,  budget_amount = _budget_amount)
+					db.session.add(budget_object)
+					db.session.commit()
+					session['current_budget_id'] = budget_object.id
+					db.session.close()
+					gc.collect()
+					flash("Budget Set!", "success")
+
+				l = [calculate_expenditureBudget_month(userid=User.query.filter_by(username=username).first().id, month = month) for month in range(1,13)]
+				exp, budg =  zip(*l)
+				gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
+
+				return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
+
 			
 			for key in CATS.keys():
 				for cat in CATS[key]:

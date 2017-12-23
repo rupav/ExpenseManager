@@ -14,7 +14,7 @@
 	      <li><a href="#monthly_expense" aria-controls="monthly_expense" role="tab" data-toggle="tab">Monthly</a></li>
 	     </ul>
     </li>
-    <li role="presentation"><a href="#recommend" aria-controls="recommend" role="tab" data-toggle="tab">Recommendation</a></li>
+    <li role="presentation"><a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Stats</a></li>
   </ul>
   <!-- Tab panes -->
    <div class="tab-content">
@@ -28,7 +28,7 @@
 			<br>
 					
 				<!-- Trigger the modal with a button -->
-				<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Edit Budget</button>
+				<button type="button" class="btn btn-primary btn-block"" data-toggle="modal" data-target="#myModal">Edit Budget</button>
 
    				<!-- Modal -->
 				<div id="myModal" class="modal fade" role="dialog">
@@ -64,10 +64,10 @@
 		    		<br>
 		    		<div class="container-fluid" >
 		    			<p id="cat_daily">
-		    			{{cat}} 
-						<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-trash"  style="float:right;" ></span></button>
-		    			<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-ok"  style="float:right;" ></span> </button>
+		    			{{cat}}
+
 		    			<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#ModalEditDaily{{loop.index}}" style="float:right;"><span class="glyphicon glyphicon-edit"></span></button> 
+		    			
 		    			</p>
 		    		</div>
 		    		<!-- Modal -->
@@ -107,9 +107,9 @@
 		    		<div class="container-fluid" >
 		    			<p id="cat_daily">
 		    			{{cat}} 
-						<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-trash"  style="float:right; " ></span></button>
-		    			<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#" style="float:right; padding-bottom: 11px"><span class="glyphicon glyphicon-ok" style="float:right; " ></span> </button>
+
 		    			<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#ModalEditMonthly{{loop.index}}" style="float:right; "><span class="glyphicon glyphicon-edit"></span></button> 
+
 		    			</p>
 		    		</div>
 
@@ -143,7 +143,7 @@
 		    	{% endfor %}
 		    </ul>
 		</div>
-		<div role="tabpanel" class="tab-pane" id="recommend">
+		<div role="tabpanel" class="tab-pane" id="statistics">
 			{% for pie in pie_data %}
 				<div class="container-fluid">
 					<br>
