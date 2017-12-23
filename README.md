@@ -25,6 +25,8 @@ Open git terminal(Git bash in windows), and clone your forked repo i.e. `git clo
 7. type `flask run` to run the application on server.
 8. Now your server is up and running. To view ExpenseManager page, go to `localhost:5000`.
 
+#### If any error comes up while setting up, create an issue for the same.
+
 # To Do:
 
 1. Deploy app on heroku (which I tried, but I need to shift to postgresql from sqlite which is creating errors which are yet to be solved 😫, need some time). (Sorry for inconvenience caused) 
