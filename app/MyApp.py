@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, request, url_for, redirect, session,  get_flashed_messages
 from calendar import Calendar, HTMLCalendar
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
 from Forms.forms import RegistrationForm, LoginForm
 from Models._user import User, Budget, Category, Expenditure, db, connect_to_db  #To make Models seperated folder!
 from content_manager import Content, CategoriesText
@@ -16,7 +16,9 @@ app.secret_key = os.urandom(24)
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path
 #_database =  'postgresql://localhost/[YOUR_DATABASE_NAME]'
-_database =  'postgresql+psycopg2://localhost/DataBases/test.db' 
+_database =  'postgresql:///' + 'test.db'
+#_database = "postgresql:///postgresql-crystalline-52597"
+_database = "postgres://obdxkvayrltxks:70113e774ea85210837de8ea04dd009f4a104f19a864cd09771e1b85335981e6@ec2-54-83-3-101.compute-1.amazonaws.com:5432/df1jmn45io8vio"
 connect_to_db(app,_database)
 
 
