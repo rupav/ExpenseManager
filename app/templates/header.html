@@ -14,6 +14,9 @@
 	    		<div style="margin-right: 10px; margin-left: 15px; margin-top: 5px; margin-bottom: 5px;"  class="container-fluid">
 					<h5>
 						<a href="{{ url_for('main') }}"> <span class="glyphicon glyphicon-home"></span> Home </a>
+						{% if session.username == 'admin' %}
+							<a role="presentation" href="{{ url_for('database') }}"><span class="glyphicon glyphicon-cloud"></span> Database Access!  </a>
+						{% endif %}
 						{% if session.logged_in %}
 							<a role="presentation" href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Log Out  </a>
 						{% else %}

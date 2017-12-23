@@ -59,9 +59,6 @@
 			</ul>
 		</div>
 		<div role="tabpanel" {% if active_tab == 'expense' and isDaily == True %} class="tab-pane active" {% else %} class="tab-pane" {% endif %} id="daily_expense">
-			<div class="card" style="-moz-transition: all 5s; display: inline-block; cursor: pointer; overflow: hidden;background: green; -moz-transform:scale(1.19); text-shadow: red;"  >
-				<h3>Hi</h3>
-			</div>
 			<ul>
 		    	{% for cat in CATS["Daily"] %}
 		    		<br>

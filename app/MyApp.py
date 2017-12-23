@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, request, url_for, redirect, ses
 from calendar import Calendar, HTMLCalendar
 from flask_sqlalchemy import SQLAlchemy 
 from Forms.forms import RegistrationForm, LoginForm
-from Models._user import User, Budget, Category, Expenditure, db, connect_to_db  #To make Models seperated folder!
+from Models._user import User, Budget, Category, Expenditure, db, connect_to_db 
 from content_manager import Content, CategoriesText
 from passlib.hash import sha256_crypt
 from functools import wraps
@@ -15,14 +15,16 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path
+
+'''
+Testing Heroku deploy- unsuccessful!
 #_database =  'postgresql://localhost/[YOUR_DATABASE_NAME]'
-_database =  'postgresql:///' + 'test.db'
 #_database = "postgresql:///postgresql-crystalline-52597"
-_database = "postgres://obdxkvayrltxks:70113e774ea85210837de8ea04dd009f4a104f19a864cd09771e1b85335981e6@ec2-54-83-3-101.compute-1.amazonaws.com:5432/df1jmn45io8vio"
+#_database = "postgres://obdxkvayrltxks:70113e774ea85210837de8ea04dd009f4a104f19a864cd09771e1b85335981e6@ec2-54-83-3-101.compute-1.amazonaws.com:5432/df1jmn45io8vio"
+'''
+
 connect_to_db(app,_database)
 
-
-TOPIC_DICT = Content()
 CATS = CategoriesText()
 
 def admin_access_required(f):
@@ -72,7 +74,6 @@ def initialize_categories():
 		db.session.commit()
 		db.session.close()
 		gc.collect()
-		flash("Categories Initialized!", "success")
 		return True
 	return False
 
@@ -184,8 +185,6 @@ def dashboard():
 				db.session.add(budget_object)
 				db.session.commit()
 				session['current_budget_id'] = budget_object.id
-				flash(session['current_budget_id'])
-				flash(_budget_userid)
 				db.session.close()
 				gc.collect()
 				flash("Budget Set!", "success")
@@ -205,7 +204,7 @@ def dashboard():
 						db.session.commit()
 						db.session.close()
 						gc.collect()
-						flash("Expenditure recorded of {}!".format(cat))
+						flash("Expenditure recorded of {}!".format(cat),"success")
 
 						pie_data = [pie_chart([cat for cat in CATS['Daily'] + CATS['Monthly']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()]), "My Expenditure Distribution this Month."), 
 						            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in Category.query.all()]) , "My Expenditure Distribution today!")]
@@ -215,10 +214,8 @@ def dashboard():
 						gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
 
 						if Category.query.filter_by(category = cat).first().category_daily == True:
-							flash(calculate_expenditure(_category_id, _expenditure_userid, True), "default")
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
 						else:
-							flash(calculate_expenditure(_category_id, _expenditure_userid, False), "default")
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False, pie_data = pie_data, gauge_data = gauge_data)
 					
 			
@@ -260,7 +257,6 @@ def register_page():
 			_github_username = form.github_username.data
 			_email = form.email.data
 			_password = sha256_crypt.encrypt(str(form.password.data))
-			flash(form.example.data)
 			user = User(username = _username, github_username = _github_username, email = _email, password = _password)
 			db.create_all()
 			if User.query.filter_by(username=_username).first() is not None:
