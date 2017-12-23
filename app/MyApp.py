@@ -15,6 +15,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path
+#_database =  'postgresql://localhost/[YOUR_DATABASE_NAME]'
+_database =  'postgresql+psycopg2://localhost/DataBases/test.db' 
 connect_to_db(app,_database)
 
 
