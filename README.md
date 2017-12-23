@@ -1,6 +1,14 @@
 # ExpenseManager
-A web app for expense manager.
+A web app for expense manager made using Flask (a python microframework).
 Made for CSI, NSIT event. 
+
+## Key Features:
+1. Data visualization for user
+2. Set and add budget for a given month.
+3. Set expenditure daily or on a monthly basis.
+4. Use of python libraries and jinja to avoid Javascript and Jquery completely.
+5. Login authentication. (created using python decorators)
+6. Database access only for admin.
 
 # Local Development Setup
 
@@ -24,3 +32,4 @@ Open git terminal(Git bash in windows), and clone your forked repo i.e. `git clo
 3. Plotting of purchase location of a user in a map.
 4. Add more features to the app like,providing a option to add a new category, use Wordnet to automatically add expenditure of a user in one of the pre-defined categories by comments.
 5. Comparision of a user with average users in terms of budget and expenditure.
+6. Add relevant in home tab in the dashboard.
