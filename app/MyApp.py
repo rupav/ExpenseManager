@@ -21,12 +21,12 @@ _database = 'sqlite:///'+file_path
 _database = "postgresql://postgres:rupav@localhost/expense_database" 
 #_database = "postgresql+psycopg2:///" + file_path
 #_database = "postgresql://postgres:postgres@localhost/" + file_path
-'''
-Testing Heroku deploy- unsuccessful!
+
+#Testing Heroku deploy- unsuccessful!
 #_database =  'postgresql://localhost/[YOUR_DATABASE_NAME]'
 #_database = "postgresql:///postgresql-crystalline-52597"
 #_database = "postgres://obdxkvayrltxks:70113e774ea85210837de8ea04dd009f4a104f19a864cd09771e1b85335981e6@ec2-54-83-3-101.compute-1.amazonaws.com:5432/df1jmn45io8vio"
-'''
+_database = " postgres://ldhtwsrltzidqz:5a06ecc16ae12655e278c0388f59dbe67b3cb2538036f9b2dcb1bcd39a93c49a@ec2-54-227-250-33.compute-1.amazonaws.com:5432/d9pouvsphkm6qe"
 
 connect_to_db(app,_database)
 
