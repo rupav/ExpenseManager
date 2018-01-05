@@ -12,7 +12,7 @@ class User(db.Model):
 	username = db.Column(db.String(80))
 	github_username = db.Column(db.String(80))
 	email = db.Column(db.String(120))
-	password = db.Column(db.String(20))
+	password = db.Column(db.String(120))
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)

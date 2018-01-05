@@ -9,13 +9,18 @@ from functools import wraps
 from datetime import datetime
 import gc, os
 import pygal
+import urllib.parse
+import psycopg2
+
 
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path
-
+_database = "postgresql://postgres:rupav@localhost/expense_database" 
+#_database = "postgresql+psycopg2:///" + file_path
+#_database = "postgresql://postgres:postgres@localhost/" + file_path
 '''
 Testing Heroku deploy- unsuccessful!
 #_database =  'postgresql://localhost/[YOUR_DATABASE_NAME]'
@@ -176,7 +181,7 @@ def dashboard():
 	_exp = exp[datetime.today().month - 1]
 	if _budg > 1:
 		if _exp > _budg:
-			flash("You have exceeded your budget limit this month by {} Rs.".format(exp-budget),"danger")
+			flash("You have exceeded your budget limit this month by {} Rs.".format(_exp-_budg),"danger")
 		elif _exp == _budg:
 			flash("Expenses equalled to budget this month, time to stop spending","warning")
 		else:
