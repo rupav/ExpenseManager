@@ -176,7 +176,7 @@ def dashboard():
 	username = session['username']
 	daily_cats = Category.query.filter_by(category_daily=True).all()
 	pie_data = [pie_chart([cat for cat in CATS['Daily'] + CATS['Monthly']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()]), "My Expenditure Distribution this Month."), 
-	            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in daily_cats]) , "My Expenditure Distribution today!")]
+	            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in Category.query.all()]) , "My Expenditure Distribution today!")]
 	months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 	l = [calculate_expenditureBudget_month(userid=User.query.filter_by(username=username).first().id, month = month) for month in range(1,13)]
 	exp, budg =  zip(*l)
@@ -246,7 +246,7 @@ def dashboard():
 						flash("Expenditure recorded of {}!".format(cat),"success")
 
 						pie_data = [pie_chart([cat for cat in CATS['Daily'] + CATS['Monthly']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()]), "My Expenditure Distribution this Month."), 
-						            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in daily_cats]) , "My Expenditure Distribution today!")]
+						            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in Category.query.all()]) , "My Expenditure Distribution today!")]
 
 						l = [calculate_expenditureBudget_month(userid=User.query.filter_by(username=username).first().id, month = month) for month in range(1,13)]
 						exp, budg =  zip(*l)
