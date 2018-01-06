@@ -15,7 +15,7 @@ import psycopg2
 
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.config['SECRET_KEY'] = os.urandom(24)
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path    
 
@@ -184,7 +184,7 @@ def dashboard():
 	_exp = exp[datetime.today().month - 1]
 	if _budg > 1:
 		if _exp > _budg:
-			flash("You have exceeded your budget limit this month by {} Rs.".format(_exp-_budg),"danger")
+			flash("You have exceeded your budget limit this month by {} Rs.".format(_exp - _budg),"danger")
 		elif _exp == _budg:
 			flash("Expenses equalled to budget this month, time to stop spending","warning")
 		else:
