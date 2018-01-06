@@ -16,6 +16,7 @@ import psycopg2
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
+app.secret_key = os.environ["APP_SECRET_KEY"]
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path    
 
