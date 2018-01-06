@@ -256,7 +256,16 @@ def dashboard():
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
 						else:
 							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False, pie_data = pie_data, gauge_data = gauge_data)
-					
+			
+			_budg = budg[datetime.today().month - 1]
+			_exp = exp[datetime.today().month - 1]
+			if _budg > 1:
+				if _exp > _budg:
+					flash("You have exceeded your budget limit this month by {} Rs.".format(_exp - _budg),"danger")
+				elif _exp == _budg:
+					flash("Expenses equalled to budget this month, time to stop spending","warning")
+				else:
+					flash("Keep spending, you have {} Rs. to spend".format(_budg - _exp),"success")		
 			
 			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
 		else:
