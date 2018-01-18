@@ -1,4 +1,5 @@
 from flask import Flask, render_template, flash, request, url_for, redirect, session,  get_flashed_messages
+from flask_mail import Mail, Message
 from calendar import Calendar, HTMLCalendar
 from flask_sqlalchemy import SQLAlchemy 
 from Forms.forms import RegistrationForm, LoginForm
@@ -7,6 +8,7 @@ from content_manager import CategoriesText
 from passlib.hash import sha256_crypt
 from functools import wraps
 from datetime import datetime
+import random
 import gc, os
 import pygal
 import urllib.parse
@@ -16,7 +18,7 @@ import psycopg2
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-#app.secret_key = os.environ["APP_SECRET_KEY"]
+app.secret_key = os.environ["APP_SECRET_KEY"]
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path    
 
@@ -30,9 +32,20 @@ _database = 'sqlite:///'+file_path
 '''
 comment following _database value to run the file locally!
 '''
-#_database = "postgres://ldhtwsrltzidqz:5a06ecc16ae12655e278c0388f59dbe67b3cb2538036f9b2dcb1bcd39a93c49a@ec2-54-227-250-33.compute-1.amazonaws.com:5432/d9pouvsphkm6qe"
+_database = "postgres://ldhtwsrltzidqz:5a06ecc16ae12655e278c0388f59dbe67b3cb2538036f9b2dcb1bcd39a93c49a@ec2-54-227-250-33.compute-1.amazonaws.com:5432/d9pouvsphkm6qe"
 
 connect_to_db(app,_database)
+
+# Setting up mailing config!
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_TLS=False,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME = 'rupavjain1@gmail.com',
+    MAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]   #stored as environment variable.
+)
+mail = Mail(app)
 
 CATS = CategoriesText()
 
@@ -321,6 +334,49 @@ def register_page():
 	except Exception as e:
 		return render_template('error.html',e=e)
 
+@app.route('/forget_password/', methods=['GET', 'POST'])
+def forget_password():
+	
+	#session['email'] = None
+	_email = None
+	try:
+		if request.method=="POST":
+			if request.form['submit'] == "Send Email":
+				#check if email matches in database
+				_email = request.form['email']
+				if User.query.filter_by(email=_email).first() is None:
+					flash('Email is not registered with us', "danger")
+					_email = None
+				else:
+					session['username'] = User.query.filter_by(email=_email).first().username
+					msg = Message('Hello, your personal expense manager app!', sender = 'rupavjain1@gmail.com', recipients = [_email])
+					#time = datetime
+					secret_key = random.randint(1000,10000)
+					session['otp'] = secret_key
+					session.modified = True
+					msg.body = "Your One Time password: {}. \n Valid till half an hour from the generation of the OTP.".format(secret_key)
+					mail.send(msg)
+					#session['email'] = _email
+					flash("Mail Sent!", "success")
+				return render_template('forget_password.html')
+			if request.form['submit'] == "Verify OTP":
+				otp = request.form['otp']
+				if int(otp) == session['otp']:
+					if 'username' in session:
+						session['logged_in'] = True
+						return redirect(url_for('dashboard'))
+					else:
+						flash("First enter email!")
+						return render_template('forget_password.html')
+				else:
+					flash("OTP is incorrect. Try again!", "warning")
+					return render_template('forget_password.html')
+
+		else:
+			return render_template('forget_password.html')
+	except Exception as e:
+		return render_template('error.html', e=e)
+
 @app.route('/database/', methods=['GET','POST'])
 @login_required
 @admin_access_required
@@ -334,7 +390,8 @@ def database():
 @app.errorhandler(500)
 @app.errorhandler(404)
 def page_not_found(e):
-	return render_template('error.html',e=e)
+	return render_template('error.html', e=e)
+
 
 if __name__ == "__main__":
 	db.create_all()
