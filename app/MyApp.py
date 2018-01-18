@@ -187,6 +187,7 @@ def dashboard():
 	html_cal = HTMLCalendar()
 	html_code =  html_cal.formatmonth(datetime.today().year, datetime.today().month, True)
 	username = session['username']
+	user_email = User.query.filter_by(username=username).first().email
 	daily_cats = Category.query.filter_by(category_daily=True).all()
 	pie_data = [pie_chart([cat for cat in CATS['Daily'] + CATS['Monthly']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= False) for category_object in Category.query.all()]), "My Expenditure Distribution this Month."), 
 	            pie_chart([cat for cat in CATS['Daily']], convert_toPercent([calculate_expenditure(category_object.id, userid=User.query.filter_by(username=username).first().id, today= True) for category_object in Category.query.all()]) , "My Expenditure Distribution today!")]
@@ -209,6 +210,7 @@ def dashboard():
 		if request.method == 'POST':
 			initialize_categories()
 			username = session['username']
+			
 
 			if request.form['submit'] == "Set Password":
 				new_password = request.form['NewPassword']
@@ -221,7 +223,14 @@ def dashboard():
 				flash("Password Changed!", "success")
 				flash("Login Again!")
 				return redirect(url_for('login_page'))
-
+			if request.form['submit'] == 'Save Email':
+				new_email = request.form['email']
+				User.query.filter_by(username = username).first().email = new_email
+				db.session.commit()
+				db.session.close()
+				gc.collect()
+				flash("Email changed", "success")
+				return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', isDaily=True, pie_data = pie_data, gauge_data = gauge_data, user_email = user_email)
 
 			if request.form['submit'] == "Set Budget":
 				_budget_userid = User.query.filter_by(username = username).first().id
@@ -253,7 +262,7 @@ def dashboard():
 				exp, budg =  zip(*l)
 				gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
 
-				return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
+				return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', isDaily=True, pie_data = pie_data, gauge_data = gauge_data, user_email = user_email)
 
 			
 			for key in CATS.keys():
@@ -280,15 +289,15 @@ def dashboard():
 						gauge_data = gauge_chart(['{}{}'.format(a,b) for a, b in zip(months,[' Expenses']*12)], exp, budg)
 
 						if Category.query.filter_by(category = cat).first().category_daily == True:
-							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True, pie_data = pie_data, gauge_data = gauge_data)
+							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=True, pie_data = pie_data, gauge_data = gauge_data, user_email = user_email)
 						else:
-							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False, pie_data = pie_data, gauge_data = gauge_data)
+							return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'expense', isDaily=False, pie_data = pie_data, gauge_data = gauge_data, user_email = user_email)
 					
 			
 			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home')
 		else:
 			flash("Welcome!","default")
-			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', pie_data = pie_data, gauge_data = gauge_data)
+			return render_template('dashboard.html',CATS = CATS, html_code = html_code, active_tab = 'Home', pie_data = pie_data, gauge_data = gauge_data, user_email = user_email)
 	except Exception as e:
 		return render_template('error.html',e=e)
 

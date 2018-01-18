@@ -22,6 +22,15 @@
 			<ul>
 				<h3>Welcome {{ session.username }}!</h3>
 			</ul>
+			<br>
+			
+			<form action="" class="form-inline" method="post">
+				<input type="text" class="form-control" name="email" placeholder="{{user_email}}" value="{{request.form.email}}">
+  				<button type="submit" class="btn btn-primary mb-2" name="submit" value="Save Email">Save</button>
+			</form>
+
+			<br>
+
 			<!-- Trigger the modal with a button -->
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#PasswordModal">Reset Password</button>
 
