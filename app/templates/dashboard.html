@@ -19,9 +19,8 @@
   <!-- Tab panes -->
    <div class="tab-content">
 	   <div role="tabpanel" {% if active_tab == 'Home' %} class="tab-pane active" {% else %} class="tab-pane" {% endif %} id="home">
-			<ul>
-				<h3>Welcome {{ session.username }}!</h3>
-			</ul>
+			
+			<h3 style="text-align: center;">Welcome {{ session.username }}!</h3>
 			<br>
 			
 			<form action="" class="form-inline" method="post">
@@ -36,7 +35,7 @@
 
    				<!-- Modal -->
 				<div id="PasswordModal" class="modal fade" role="dialog">
-				  <div class="modal-dialog modal-sm">
+				  <div class="modal-dialog modal-md">
 
 				    <!-- Modal content-->
 				    <div class="modal-content">
