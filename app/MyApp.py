@@ -18,7 +18,7 @@ import psycopg2
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-app.secret_key = os.environ["APP_SECRET_KEY"]
+#app.secret_key = os.environ["APP_SECRET_KEY"]
 file_path = os.path.abspath(os.getcwd())+"/DataBases/test.db"
 _database = 'sqlite:///'+file_path    
 
@@ -32,7 +32,7 @@ _database = 'sqlite:///'+file_path
 '''
 comment following _database value to run the file locally!
 '''
-_database = "postgres://ldhtwsrltzidqz:5a06ecc16ae12655e278c0388f59dbe67b3cb2538036f9b2dcb1bcd39a93c49a@ec2-54-227-250-33.compute-1.amazonaws.com:5432/d9pouvsphkm6qe"
+#_database = "postgres://ldhtwsrltzidqz:5a06ecc16ae12655e278c0388f59dbe67b3cb2538036f9b2dcb1bcd39a93c49a@ec2-54-227-250-33.compute-1.amazonaws.com:5432/d9pouvsphkm6qe"
 
 connect_to_db(app,_database)
 
@@ -43,7 +43,7 @@ app.config.update(
     MAIL_USE_TLS=False,
     MAIL_USE_SSL=True,
     MAIL_USERNAME = 'rupavjain1@gmail.com',
-    MAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]   #stored as environment variable.
+    MAIL_PASSWORD = 'asjd'#os.environ["EMAIL_PASSWORD"]   #stored as environment variable.
 )
 mail = Mail(app)
 
@@ -209,6 +209,20 @@ def dashboard():
 		if request.method == 'POST':
 			initialize_categories()
 			username = session['username']
+
+			if request.form['submit'] == "Set Password":
+				new_password = request.form['NewPassword']
+				new_password = sha256_crypt.encrypt(str(new_password))
+				User.query.filter_by(username = username).first().password = new_password
+				db.session.commit()
+				db.session.close()
+				session.clear()
+				gc.collect()
+				flash("Password Changed!", "success")
+				flash("Login Again!")
+				return redirect(url_for('login_page'))
+
+
 			if request.form['submit'] == "Set Budget":
 				_budget_userid = User.query.filter_by(username = username).first().id
 				flag = 0
