@@ -1,6 +1,6 @@
 # ExpenseManager
 A web app for expense manager made using Flask (a python microframework).
-Made for CSI, NSIT event. 
+Made for CSI, NSIT event. (Couldn't win, but got a special mention 🎉)
 
 ## Key Features:
 1. Data visualization for user
