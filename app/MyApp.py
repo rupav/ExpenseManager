@@ -383,18 +383,17 @@ def forget_password():
 					flash("Mail Sent!", "success")
 				return render_template('forget_password.html')
 			if request.form['submit'] == "Verify OTP":
-				otp = request.form['otp']
-				if int(otp) == session['otp']:
-					if 'username' in session:
+				otp = request.form['otp']				
+				if 'username' in session:
+					if int(otp) == session['otp']:
 						session['logged_in'] = True
 						return redirect(url_for('dashboard'))
 					else:
-						flash("First enter email!")
+						flash("OTP is incorrect. Try again!", "warning")
 						return render_template('forget_password.html')
 				else:
-					flash("OTP is incorrect. Try again!", "warning")
+					flash("First enter email!")
 					return render_template('forget_password.html')
-
 		else:
 			return render_template('forget_password.html')
 	except Exception as e:
