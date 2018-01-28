@@ -23,4 +23,4 @@ Made for CSI, NSIT event. (Couldn't win, but got a special mention 🎉)
 - [ ] Plotting of purchase location of a user in a map.
 - [ ] Add more features to the app like,providing a option to add a new category, use Wordnet to automatically add expenditure of a user in one of the pre-defined categories by comments.
 - [ ] Comparision of a user with average users in terms of budget and expenditure.
-- [ ] Add relevant in home tab in the dashboard.
+- [x] Add relevant info in home tab in the dashboard.
