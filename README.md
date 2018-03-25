@@ -19,6 +19,7 @@ Made for CSI, NSIT event. (Couldn't win, but got a special mention 🎉)
 # To Do:
 
 - [x] Deploy app on heroku 🚀.
+- [X] Add tests and Travis CI
 - [ ] Use Bokeh ✨ instead of pygal for data visualization.
 - [ ] Plotting of purchase location of a user in a map.
 - [ ] Add more features to the app like,providing a option to add a new category, use Wordnet to automatically add expenditure of a user in one of the pre-defined categories by comments.
