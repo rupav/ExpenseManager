@@ -1,4 +1,6 @@
 # ExpenseManager
+[![Build Status](https://travis-ci.org/rupav/ExpenseManager.svg?branch=master)](https://travis-ci.org/rupav/ExpenseManager)
+
 A web app for expense manager made using Flask (a python microframework).
 Made for CSI, NSIT event. (Couldn't win, but got a special mention 🎉)
 
